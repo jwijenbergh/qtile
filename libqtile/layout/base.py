@@ -470,24 +470,30 @@ class _SimpleLayoutBase(Layout):
         self.group.layout_all()
 
     def focus_first(self):
+        print("FOCUS FIRST")
         return self.clients.focus_first()
 
     def focus_last(self):
+        print("FOCUS LAST")
         return self.clients.focus_last()
 
     def focus_next(self, window):
+        print("FOCUS NEXT")
         return self.clients.focus_next(window)
 
     def focus_previous(self, window):
+        print("FOCUS PREVIOUS")
         return self.clients.focus_previous(window)
 
     def previous(self):
+        print("PREVIOUS")
         if self.clients.current_client is None:
             return
         client = self.focus_previous(self.clients.current_client) or self.focus_last()
         self.group.focus(client, True)
 
     def next(self):
+        print("NEXT")
         if self.clients.current_client is None:
             return
         client = self.focus_next(self.clients.current_client) or self.focus_first()

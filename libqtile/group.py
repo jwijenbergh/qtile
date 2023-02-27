@@ -270,6 +270,8 @@ class _Group(CommandObject):
         hadfocus = self._remove_from_focus_history(win)
         win.group = None
 
+        print("CALL REMOVE")
+
         if win.floating:
             nextfocus = self.floating_layout.remove(win)
 

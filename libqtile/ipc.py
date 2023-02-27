@@ -145,7 +145,7 @@ class _IPC:
 
 
 class Client:
-    def __init__(self, socket_path: str, is_json=False) -> None:
+    def __init__(self, socket_path: str, is_json=True) -> None:
         """Create a new IPC client
 
         Parameters
