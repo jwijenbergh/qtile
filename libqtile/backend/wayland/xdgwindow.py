@@ -29,7 +29,7 @@ from wlroots.wlr_types.xdg_shell import XdgSurface, XdgTopLevelWMCapabilities
 
 from libqtile import hook
 from libqtile.backend import base
-from libqtile.backend.base import FloatStates
+from libqtile.backend.base import WindowStates
 from libqtile.backend.wayland.window import Static, Window
 from libqtile.command.base import expose_command
 from libqtile.log_utils import logger
@@ -181,7 +181,7 @@ class XdgWindow(Window[XdgSurface]):
         return pid[0]
 
     def _update_fullscreen(self, do_full: bool) -> None:
-        if do_full != (self._float_state == FloatStates.FULLSCREEN):
+        if do_full != (self._float_state == WindowStates.FULLSCREEN):
             self.surface.set_fullscreen(do_full)
             if self.ftm_handle:
                 self.ftm_handle.set_fullscreen(do_full)

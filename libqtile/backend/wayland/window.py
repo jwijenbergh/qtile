@@ -39,7 +39,7 @@ from wlroots.wlr_types.scene import SceneBuffer, SceneRect, SceneTree
 
 from libqtile import config, hook, utils
 from libqtile.backend import base
-from libqtile.backend.base import FloatStates
+from libqtile.backend.base import WindowStates
 from libqtile.backend.wayland.drawer import Drawer
 from libqtile.backend.wayland.wlrq import HasListeners
 from libqtile.command.base import CommandError, expose_command
@@ -141,7 +141,7 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
         self.float_y: int | None = None
         self._float_width: int = 0
         self._float_height: int = 0
-        self._float_state = FloatStates.NOT_FLOATING
+        self._float_state = WindowStates.TILED
 
         # Each regular window gets a foreign toplevel handle: all instances of Window
         # (i.e. toplevel XDG windows and regular X11 windows) have one. If a user uses
@@ -411,11 +411,11 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
 
     @property
     def floating(self) -> bool:
-        return self._float_state != FloatStates.NOT_FLOATING
+        return self._float_state != WindowStates.TILED
 
     @floating.setter
     def floating(self, do_float: bool) -> None:
-        if do_float and self._float_state == FloatStates.NOT_FLOATING:
+        if do_float and self._float_state == WindowStates.TILED:
             if self.group and self.group.screen:
                 screen = self.group.screen
                 if not self._float_width:  # These might start as 0
@@ -429,30 +429,30 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
                 )
             else:
                 # if we are setting floating early, e.g. from a hook, we don't have a screen yet
-                self._float_state = FloatStates.FLOATING
-        elif (not do_float) and self._float_state != FloatStates.NOT_FLOATING:
+                self._float_state = WindowStates.FLOATING
+        elif (not do_float) and self._float_state != WindowStates.TILED:
             self._update_fullscreen(False)
-            if self._float_state == FloatStates.FLOATING:
+            if self._float_state == WindowStates.FLOATING:
                 # store last size
                 self._float_width = self._width
                 self._float_height = self._height
-            self._float_state = FloatStates.NOT_FLOATING
+            self._float_state = WindowStates.TILED
             if self.group:
                 self.group.mark_floating(self, False)
             hook.fire("float_change")
 
     @property
     def fullscreen(self) -> bool:
-        return self._float_state == FloatStates.FULLSCREEN
+        return self._float_state == WindowStates.FULLSCREEN
 
     @fullscreen.setter
     def fullscreen(self, do_full: bool) -> None:
-        if do_full and self._float_state != FloatStates.FULLSCREEN:
+        if do_full and self._float_state != WindowStates.FULLSCREEN:
             screen = (self.group and self.group.screen) or self.qtile.find_closest_screen(
                 self.x, self.y
             )
 
-            if self._float_state not in (FloatStates.MAXIMIZED, FloatStates.FULLSCREEN):
+            if self._float_state not in (WindowStates.MAXIMIZED, WindowStates.FULLSCREEN):
                 self._save_geometry()
 
             bw = self.group.floating_layout.fullscreen_border_width if self.group else 0
@@ -461,9 +461,9 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
                 screen.y,
                 screen.width - 2 * bw,
                 screen.height - 2 * bw,
-                new_float_state=FloatStates.FULLSCREEN,
+                new_float_state=WindowStates.FULLSCREEN,
             )
-        elif self._float_state == FloatStates.FULLSCREEN:
+        elif self._float_state == WindowStates.FULLSCREEN:
             self._restore_geometry()
             self.floating = False
 
@@ -473,7 +473,7 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
 
     @property
     def maximized(self) -> bool:
-        return self._float_state == FloatStates.MAXIMIZED
+        return self._float_state == WindowStates.MAXIMIZED
 
     @maximized.setter
     def maximized(self, do_maximize: bool) -> None:
@@ -482,7 +482,7 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
                 self.x, self.y
             )
 
-            if self._float_state not in (FloatStates.MAXIMIZED, FloatStates.FULLSCREEN):
+            if self._float_state not in (WindowStates.MAXIMIZED, WindowStates.FULLSCREEN):
                 self._save_geometry()
 
             bw = self.group.floating_layout.max_border_width if self.group else 0
@@ -491,10 +491,10 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
                 screen.dy,
                 screen.dwidth - 2 * bw,
                 screen.dheight - 2 * bw,
-                new_float_state=FloatStates.MAXIMIZED,
+                new_float_state=WindowStates.MAXIMIZED,
             )
         else:
-            if self._float_state == FloatStates.MAXIMIZED:
+            if self._float_state == WindowStates.MAXIMIZED:
                 self._restore_geometry()
                 self.floating = False
 
@@ -503,15 +503,15 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
 
     @property
     def minimized(self) -> bool:
-        return self._float_state == FloatStates.MINIMIZED
+        return self._float_state == WindowStates.MINIMIZED
 
     @minimized.setter
     def minimized(self, do_minimize: bool) -> None:
         if do_minimize:
-            if self._float_state != FloatStates.MINIMIZED:
-                self._reconfigure_floating(new_float_state=FloatStates.MINIMIZED)
+            if self._float_state != WindowStates.MINIMIZED:
+                self._reconfigure_floating(new_float_state=WindowStates.MINIMIZED)
         else:
-            if self._float_state == FloatStates.MINIMIZED:
+            if self._float_state == WindowStates.MINIMIZED:
                 self.floating = False
 
         if self.ftm_handle:
@@ -563,10 +563,10 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
         y: int | None = None,
         w: int | None = None,
         h: int | None = None,
-        new_float_state: FloatStates = FloatStates.FLOATING,
+        new_float_state: WindowStates = WindowStates.FLOATING,
     ) -> None:
-        self._update_fullscreen(new_float_state == FloatStates.FULLSCREEN)
-        if new_float_state == FloatStates.MINIMIZED:
+        self._update_fullscreen(new_float_state == WindowStates.FULLSCREEN)
+        if new_float_state == WindowStates.MINIMIZED:
             self.hide()
         else:
             self.place(
@@ -598,10 +598,10 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
             wm_class=self.get_wm_class(),
             shell="XDG" if self.__class__.__name__ == "XdgWindow" else "XWayland",
             float_info=float_info,
-            floating=self._float_state != FloatStates.NOT_FLOATING,
-            maximized=self._float_state == FloatStates.MAXIMIZED,
-            minimized=self._float_state == FloatStates.MINIMIZED,
-            fullscreen=self._float_state == FloatStates.FULLSCREEN,
+            floating=self._float_state != WindowStates.TILED,
+            maximized=self._float_state == WindowStates.MAXIMIZED,
+            minimized=self._float_state == WindowStates.MINIMIZED,
+            fullscreen=self._float_state == WindowStates.FULLSCREEN,
         )
 
     def match(self, match: config.Match) -> bool:

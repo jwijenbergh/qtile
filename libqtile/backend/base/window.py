@@ -19,8 +19,8 @@ if typing.TYPE_CHECKING:
 
 
 @enum.unique
-class FloatStates(enum.Enum):
-    NOT_FLOATING = 1
+class WindowStates(enum.Enum):
+    TILED = 1
     FLOATING = 2
     MAXIMIZED = 3
     FULLSCREEN = 4
