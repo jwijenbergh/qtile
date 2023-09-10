@@ -267,7 +267,7 @@ class XWindow(Window[xwayland.Surface]):
         return self.surface.role
 
     def _update_fullscreen(self, do_full: bool) -> None:
-        if do_full != (self._float_state == WindowStates.FULLSCREEN):
+        if do_full != (self._win_state == WindowStates.FULLSCREEN):
             self.surface.set_fullscreen(do_full)
             if self.ftm_handle:
                 self.ftm_handle.set_fullscreen(do_full)

@@ -254,9 +254,9 @@ class _Group(CommandObject):
             self.windows.append(win)
         win.group = self
         if self.qtile.config.auto_fullscreen and win.wants_to_fullscreen:
-            win._float_state = WindowStates.FULLSCREEN
+            win._win_state = WindowStates.FULLSCREEN
         elif self.floating_layout.match(win) and not win.fullscreen:
-            win._float_state = WindowStates.FLOATING
+            win._win_state = WindowStates.FLOATING
             if self.qtile.config.floats_kept_above:
                 win.keep_above(enable=True)
         if win.floating and not win.fullscreen:
