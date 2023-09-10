@@ -244,11 +244,6 @@ class XdgWindow(Window[XdgSurface]):
             if state.max_height:
                 height = min(height, state.max_height)
 
-        # save x and y float offset
-        if self.group is not None and self.group.screen is not None:
-            self.float_x = x - self.group.screen.x
-            self.float_y = y - self.group.screen.y
-
         self.x = x
         self.y = y
         self.container.node.set_position(x, y)

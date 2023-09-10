@@ -303,11 +303,6 @@ class XWindow(Window[xwayland.Surface]):
                 if hints.max_height > 0:
                     height = min(height, hints.max_height)
 
-        # save x and y float offset
-        if self.group is not None and self.group.screen is not None:
-            self.float_x = x - self.group.screen.x
-            self.float_y = y - self.group.screen.y
-
         self.x = x
         self.y = y
         self._width = width
