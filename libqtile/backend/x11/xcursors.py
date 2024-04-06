@@ -1,3 +1,5 @@
+import os
+
 from libqtile.backend.x11.xcursors_ffi import xcursors_ffi as ffi
 from libqtile.log_utils import logger
 
@@ -103,7 +105,9 @@ class Cursors(dict):
 
     def _setup_xcursor_binding(self):
         try:
-            xcursor = ffi.dlopen("libxcb-cursor.so.0")
+            xcursor = ffi.dlopen(
+                os.getenv("QTILE_DLOPEN_LIBXCBUTILCURSORS", "libxcb-cursor.so.0")
+            )
         except Exception:
             logger.info("xcb-cursor not found, fallback to font pointer")
             return False

@@ -105,7 +105,7 @@ class MockMPD(ModuleType):
 
 @pytest.fixture
 def mpd2_manager(manager_nospawn, monkeypatch, minimal_conf_noscreen, request):
-    # monkeypatch.setattr("libqtile.widget.mpd2widget.MPDClient", MockMPDClient)
+    monkeypatch.setattr("libqtile.widget.mpd2widget.MPDClient", MockMPD.MPDClient)
     monkeypatch.setitem(sys.modules, "mpd", MockMPD("mpd"))
 
     config = minimal_conf_noscreen
