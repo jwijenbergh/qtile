@@ -47,11 +47,13 @@
 # This is not intended to be a complete cffi-based pango binding.
 
 
+import os
+
 from libqtile.pango_ffi import pango_ffi as ffi
 
-gobject = ffi.dlopen("libgobject-2.0.so.0")  # type: ignore
-pango = ffi.dlopen("libpango-1.0.so.0")  # type: ignore
-pangocairo = ffi.dlopen("libpangocairo-1.0.so.0")  # type: ignore
+gobject = ffi.dlopen(os.getenv("QTILE_DLOPEN_LIBGOBJECT", "libgobject-2.0.so.0"))  # type: ignore
+pango = ffi.dlopen(os.getenv("QTILE_DLOPEN_LIBPANGO", "libpango-1.0.so.0"))  # type: ignore
+pangocairo = ffi.dlopen(os.getenv("QTILE_DLOPEN_LIBPANGOCAIRO", "libpangocairo-1.0.so.0"))  # type: ignore
 
 
 def patch_cairo_context(cairo_t):
