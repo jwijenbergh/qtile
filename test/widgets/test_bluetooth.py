@@ -195,6 +195,10 @@ def dbus_thread(monkeypatch):
     # for Github CI/Ubuntu, dbus-launch is provided by "dbus-x11" package
     launcher = shutil.which("dbus-launch")
 
+    # hardcode dbus-launch path for GitHub CI
+    if os.getenv("GITHUB_ACTIONS"):
+        launcher = "/usr/bin/dbus-launch"
+
     # If dbus-launch can't be found then tests will fail so we
     # need to skip
     if launcher is None:
