@@ -146,10 +146,10 @@
           in
             {
               name = "test-pypy310";
-              value = pkgs-pypy.mkShell {
+              value = pkgs.mkShell {
                 packages =
                   [
-                    (pkgs-pypy.pypy310.withPackages (
+                    (pkgs.pypy310.withPackages (
                       ps: (common-python-deps ps)
                     ))
                   ]
