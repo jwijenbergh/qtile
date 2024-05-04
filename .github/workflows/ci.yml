@@ -10,7 +10,7 @@ jobs:
         name: "Nix ${{ matrix.python-version }} on ${{ matrix.backend }}"
         strategy:
             matrix:
-                python-version: ['python310', 'python311', 'python312']
+                python-version: ['pypy310', 'python310', 'python311', 'python312']
                 backend: ['x11', 'wayland']
         steps:
             - uses: actions/checkout@v4

@@ -71,7 +71,6 @@
             setuptools
 
             # migrate
-            isort
             libcst
 
             # tests
@@ -87,6 +86,9 @@
           libinput
           libxkbcommon
           xorg.xcbutilwm
+
+          # sorting
+          isort
 
           # x11 deps
           xorg.xorgserver
@@ -132,7 +134,32 @@
               }
             )
             ["python310" "python311" "python312"])
-          ++ [
+          ++
+          [
+          (let
+            pkgs-pypy = import (pkgs.applyPatches {
+              name = "nixpkgs-pr-240301";
+              src = pkgs.path;
+              patches = [ (pkgs.fetchpatch {
+                url  = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/240301.patch";
+                name = "fix_sysconfig_pypy.patch";
+                hash = "sha256-McjXZfk8j31RaHp37IN+lXcJZyQL+MXnr3kj74gZo5o=";
+              }) ];
+            }) { inherit (pkgs) system; };
+          in
+            {
+              name = "test-pypy310";
+              value = pkgs-pypy.mkShell {
+                packages =
+                  [
+                    (pkgs-pypy.pypy310.withPackages (
+                      ps: (common-python-deps ps)
+                    ))
+                  ]
+                  ++ common-system-deps;
+                inherit (common-shell) env shellHook;
+              };
+            })
             {
               name = "default";
               value = pkgs.mkShell {
