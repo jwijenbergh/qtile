@@ -87,9 +87,6 @@
           libxkbcommon
           xorg.xcbutilwm
 
-          # sorting
-          isort
-
           # x11 deps
           xorg.xorgserver
           xorg.libX11
