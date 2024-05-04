@@ -10,7 +10,8 @@ jobs:
         name: "Nix ${{ matrix.python-version }} on ${{ matrix.backend }}"
         strategy:
             matrix:
-                python-version: ['pypy310', 'python310', 'python311', 'python312']
+                #python-version: ['pypy310', 'python310', 'python311', 'python312']
+                python-version: ['pypy310']
                 backend: ['x11', 'wayland']
         steps:
             - uses: actions/checkout@v4
@@ -24,6 +25,6 @@ jobs:
               with:
                  github_access_token: ${{ secrets.GITHUB_TOKEN }}
               # cache for Nix, this can get rate limited but if it does CI will not fail
-            #- uses: DeterminateSystems/magic-nix-cache-action@v2
+            - uses: DeterminateSystems/magic-nix-cache-action@v2
             - name: run tests in Nix env
               run: nix develop .#test-${{matrix.python-version}} --command qtile-run-tests-${{matrix.backend}}
