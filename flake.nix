@@ -16,6 +16,7 @@
         overlays = [(import ./nix/overlays.nix self)];
       });
   in {
+    overlays = import ./nix/overlays.nix self;
     packages = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
     in {
@@ -93,7 +94,7 @@
 
           # wayland deps
           wayland
-          wlroots_0_16
+          wlroots_0_17
           # test/backend/wayland/test_window.py
           gtk-layer-shell
 
