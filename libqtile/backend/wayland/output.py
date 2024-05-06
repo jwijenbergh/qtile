@@ -27,6 +27,7 @@ from wlroots.util.box import Box
 from wlroots.util.clock import Timespec
 from wlroots.wlr_types import Output as wlrOutput
 from wlroots.wlr_types import OutputState, SceneOutput
+from wlroots.wlr_types.output import CustomMode
 from wlroots.wlr_types.layer_shell_v1 import (
     LayerShellV1Layer,
     LayerSurfaceV1KeyboardInteractivity,
@@ -68,7 +69,7 @@ class Output(HasListeners):
 
         # Select the output's preferred mode.
         if mode := wlr_output.preferred_mode():
-            state.set_mode(mode)
+            state.mode = mode
 
         # During tests, we want to fix the geometry of the 1 or 2 outputs.
         if wlr_output.is_headless and "PYTEST_CURRENT_TEST" in os.environ:
