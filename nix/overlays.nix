@@ -3,8 +3,18 @@ self: final: super: {
     (super.pythonPackagesOverlays or [])
     ++ [
       (_: pprev: {
-        qtile = (pprev.qtile.overrideAttrs (_: rec {
-        })).overridePythonAttrs (old: let
+        pywlroots = (pprev.pywlroots.overrideAttrs(_: rec {
+          version = "0.17.0";
+          src = super.fetchFromGitHub {
+            owner = "jwijenbergh";
+            repo = "pywlroots";
+            rev = "e2d5413ad92b31b6c72de150621e6b76fd49f982";
+            hash = "sha256-n3TpvrZ9a+VzHlX0JUFnQ8cWNAtkKz7ln39fFr2ar/0=";
+          };
+        })).override {
+          wlroots = super.wlroots_0_17;
+        };
+        qtile = (pprev.qtile.overrideAttrs (old: let
           flakever = self.shortRev or "dev";
         in {
           version = "0.0.0+${flakever}.flake";
@@ -12,7 +22,9 @@ self: final: super: {
           src = ./..;
           # for qtile migrate, not in nixpkgs yet
           propagatedBuildInputs = old.propagatedBuildInputs ++ [ pprev.libcst ];
-        });
+        })).override {
+          wlroots = super.wlroots_0_17;
+        };
       })
     ];
   python3 = let
