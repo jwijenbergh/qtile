@@ -69,7 +69,7 @@ class Output(HasListeners):
 
         # Select the output's preferred mode.
         if mode := wlr_output.preferred_mode():
-            state.mode = mode
+            state.set_mode(mode)
 
         # During tests, we want to fix the geometry of the 1 or 2 outputs.
         if wlr_output.is_headless and "PYTEST_CURRENT_TEST" in os.environ:
