@@ -269,7 +269,6 @@ class XdgWindow(Window[XdgSurface]):
             self.float_x = x - self.group.screen.x
             self.float_y = y - self.group.screen.y
 
-<<<<<<< HEAD
         if width < 1:
             width = 1
 
