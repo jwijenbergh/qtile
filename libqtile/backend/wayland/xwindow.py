@@ -362,7 +362,6 @@ class XWindow(Window[xwayland.Surface]):
         self.y = y
         self._width = width
         self._height = height
-
         if needs_repos:
             self.container.node.set_position(x, y)
             self.surface.configure(x, y, width, height)
