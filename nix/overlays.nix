@@ -8,8 +8,8 @@ self: final: super: {
           src = super.fetchFromGitHub {
             owner = "jwijenbergh";
             repo = "pywlroots";
-            rev = "00198c3baea5003b07f9698a44d274ca6646e2a1";
-            hash = "sha256-aHKLLIf57MkW9GwcYQPYwk9moX/YUQd+uy1fL2URljg=";
+            rev = "2b4919bf938e481b8db283d935a028e5ed55138d";
+            hash = "sha256-lHT9TMnhN546Icub9PsepDePAJ2353a9lPjiNRUz1Vw=";
           };
         })).override {
           wlroots = super.wlroots_0_17;
@@ -36,3 +36,5 @@ self: final: super: {
     self;
   python3Packages = final.python3.pkgs;
 }
+
+
