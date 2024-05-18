@@ -297,6 +297,7 @@ class XdgWindow(Window[XdgSurface]):
         self.y = y
         self._width = width
         self._height = height
+
         if needs_repos:
             self.container.node.set_position(x, y)
             self.surface.set_size(width, height)
