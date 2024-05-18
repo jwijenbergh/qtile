@@ -226,9 +226,9 @@ class XdgWindow(Window[XdgSurface]):
     def clip(self) -> None:
         if not self.tree:
             return
-        if next(self.tree.children, None) is None:
-            return
         if not self.tree.node.enabled:
+            return
+        if next(self.tree.children, None) is None:
             return
         self.tree.node.subsurface_tree_set_clip(
             Box(self._geom.x, self._geom.y, self.width, self.height)
