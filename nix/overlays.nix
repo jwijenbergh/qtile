@@ -6,10 +6,10 @@ self: final: super: {
         pywlroots = (pprev.pywlroots.overrideAttrs(_: rec {
           version = "0.17.0";
           src = super.fetchFromGitHub {
-            owner = "jwijenbergh";
+            owner = "flacjacket";
             repo = "pywlroots";
-            rev = "13a4fb3c9aa6f6c6f0d2f6fe496fa2bfbeb3d656";
-            hash = "sha256-q0sQA4HyoMOlYG/eJZZRW1PokX716m7pDbwtxRUMt4Y=";
+            rev = "bf314bae5d7a9552225c44ab1e7bf7e4fafa869e";
+            hash = "sha256-tvem8gmih9EfseZ3MgU1UW05xfttzKLcJEaymM5uNPI=";
           };
         })).override {
           wlroots = super.wlroots_0_17;
