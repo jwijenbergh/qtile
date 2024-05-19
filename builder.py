@@ -22,7 +22,7 @@ import sys
 from setuptools import build_meta as _orig
 from setuptools.build_meta import *  # noqa: F401,F403
 
-WAYLAND_DEPENDENCIES = ["pywlroots>=0.17.0,<0.18.0"]
+WAYLAND_DEPENDENCIES = ["pywayland>=0.4.17", "xkbcommon>=0.3", "pywlroots>=0.17.0,<0.18.0"]
 
 
 def wants_wayland(config_settings):
@@ -46,9 +46,6 @@ def get_requires_for_build_wheel(config_settings=None):
 def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
     """Stop building if wayland requested but pywlroots is not installed."""
     if wants_wayland(config_settings):
-        try:
-            import wlroots  # noqa: F401
-        except ImportError:
-            sys.exit("Wayland backend requested but pywlroots is not installed.")
+        import wlroots  # noqa: F401
 
     return _orig.build_wheel(wheel_directory, config_settings, metadata_directory)
