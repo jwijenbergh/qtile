@@ -1,11 +1,12 @@
 import wlroots.ffi_build as wlr
 from cffi import FFI
 
-from libqtile.backend.wayland.cffi import cairo_buffer, libinput
+from libqtile.backend.wayland.cffi import cairo_buffer, libinput, wlr_extra
 
 SOURCE = "\n".join(
     [
         wlr.SOURCE,
+        wlr_extra.SOURCE,
         libinput.SOURCE,
         cairo_buffer.SOURCE,
     ]
@@ -25,6 +26,7 @@ ffi.set_source(
 )
 
 ffi.include(wlr.ffi_builder)
+ffi.cdef(wlr_extra.CDEF)
 ffi.cdef(libinput.CDEF)
 ffi.cdef(cairo_buffer.CDEF)
 
