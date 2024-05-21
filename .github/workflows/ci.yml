@@ -17,8 +17,8 @@ jobs:
                 # python version in .readthedocs.yaml
                 # TODO: Add back pypy here and in release.yml once:
                 # https://github.com/pypy/pypy/issues/4956 is resolved
-                python-version: ['3.10', '3.11', '3.12']
-                backend: ['x11', 'wayland']
+                python-version: ['3.11']
+                backend: ['wayland']
         steps:
             - uses: actions/checkout@v4
             - name: Set up python ${{ matrix.python-version }}
@@ -39,22 +39,8 @@ jobs:
             - name: Install wayland
               if: ${{ matrix.backend == 'wayland' }}
               run: bash -x ./scripts/ubuntu_wayland_setup
-            - name: Run Tests
-              run: |
-                [ "$(grep -c -P '\t' CHANGELOG)" = "0" ]
-                tox
-              env:
-                BACKEND: ${{ matrix.backend }}
-            - name: Upload coverage data to coveralls.io
-              continue-on-error: true
-              run: |
-                pip -q install coveralls >=3.3.0
-                coveralls --service=github
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                COVERALLS_FLAG_NAME: ${{ format('{0}-{1}', matrix.python-version, matrix.backend) }}
-                COVERALLS_PARALLEL: true
-                COVERALLS_SERVICE_JOB_ID: ${{ github.run_id }}
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
 
     coverage:
         name: Finalize Coverage

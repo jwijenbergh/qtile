@@ -515,7 +515,7 @@ class Core(base.Core, wlrq.HasListeners):
             y = box.y + box.height / 2
             self.warp_pointer(x, y)
 
-    def _on_output_layout_change(self, _listener: Listener, _data: Any) -> None:
+    def _on_output_layout_change(self, _listener: Listener | None = None, _data: Any = None) -> None:
         logger.debug("Signal: output_layout change_event")
         config = OutputConfigurationV1()
 
@@ -526,6 +526,9 @@ class Core(base.Core, wlrq.HasListeners):
             head = OutputConfigurationHeadV1.create(config, output.wlr_output)
             head.state.enabled = False
             self.output_layout.remove(output.wlr_output)
+            if output is self._current_output:
+                en_outputs = self.get_enabled_outputs()
+                self._current_output = en_outputs[0] if en_outputs else None
 
         for output in self._outputs:
             if not output.wlr_output.enabled:
@@ -537,6 +540,7 @@ class Core(base.Core, wlrq.HasListeners):
             ):
                 self.output_layout.add_auto(output.wlr_output)
 
+        # add monitors to layout that are now enabled
         for output in self._outputs:
             if not output.wlr_output.enabled:
                 continue
@@ -991,6 +995,7 @@ class Core(base.Core, wlrq.HasListeners):
         else:
             config.send_failed()
         config.destroy()
+        self._on_output_layout_change()
 
     def _process_cursor_motion(self, time_msec: int, cx: float, cy: float) -> None:
         assert self.qtile
