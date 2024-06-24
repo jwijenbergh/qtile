@@ -209,6 +209,9 @@ reconfigure_screens = True
 # focus, should we respect this or not?
 auto_minimize = True
 
+# Whether tearing is allowed in the Wayland backend if applications request it
+wl_allow_tearing = True
+
 # When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
 

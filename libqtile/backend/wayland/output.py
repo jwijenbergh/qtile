@@ -51,6 +51,7 @@ if TYPE_CHECKING:
 
 class Output(HasListeners):
     def __init__(self, core: Core, wlr_output: wlrOutput):
+        self.can_tear = True
         self.core = core
         self.renderer = core.renderer
         self.wlr_output = wlr_output
@@ -118,14 +119,51 @@ class Output(HasListeners):
         logger.debug("Signal: output destroy")
         self.finalize()
 
+    def backend_can_tear(self) -> bool:
+        if not os.getenv("WLR_DRM_NO_ATOMIC") == "1":
+            return False
+        # TODO: check if drm
+        return True
+
+    def should_tear(self) -> bool:
+        if not self.can_tear:
+            return False
+
+        if not self.core.qtile.config.wl_allow_tearing:
+            return False
+
+        if not self.backend_can_tear():
+            return False
+
+        curr = self.core.qtile.current_window
+        if not curr:
+            return False
+
+        if not curr.fullscreen:
+            return False
+
+        wlr_output = self.core.output_layout.output_at(curr.x, curr.y)
+        return wlr_output._ptr == self.wlr_output._ptr
+
+    def _on_frame_tearing(self) -> None:
+        state = OutputState()
+        if not self.scene_output.build_state(state):
+            return
+
+        state.tearing_page_flip = True
+        if not self.wlr_output.commit(state):
+            self.can_tear = False
+        # TODO: disable tearing if commit fails
+        state.finish()
+
     def _on_frame(self, _listener: Listener, _data: Any) -> None:
         self.core.configure_node_opacity(self.core.windows_tree.node)
-        try:
-            self.scene_output.commit()
-        except RuntimeError:
-            # Failed to commit scene output; skip rendering.
-            pass
+        tearing_state_updated = False
 
+        if self.should_tear():
+            self._on_frame_tearing()
+        else:
+            self.scene_output.commit()
         # Inform clients of the frame
         self.scene_output.send_frame_done(Timespec.get_monotonic_time())
 

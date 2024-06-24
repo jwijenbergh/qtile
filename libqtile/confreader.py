@@ -71,6 +71,7 @@ class Config:
     auto_minimize: bool
     # Really we'd want to check this Any is libqtile.backend.wayland.ImportConfig, but
     # doing so forces the import, creating a hard dependency for wlroots.
+    wl_allow_tearing: bool
     wl_input_rules: dict[str, Any] | None
     wl_xcursor_theme: str | None
     wl_xcursor_size: int
