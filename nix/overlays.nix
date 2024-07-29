@@ -29,7 +29,7 @@ self: final: prev: {
             propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ [ pprev.libcst ];
           }
         )).override
-          { wlroots = prev.wlroots_0_17; };
+          { wlroots = prev.wlroots_0_18; };
     })
   ];
   python3 =
