@@ -1,8 +1,8 @@
+#include "xdg-view.h"
 #include "server.h"
 #include "view.h"
 #include "wlr/types/wlr_xdg_decoration_v1.h"
 #include "xdg-shell-protocol.h"
-#include "xdg-view.h"
 #include <stdlib.h>
 
 static void qw_xdg_view_do_focus(struct qw_xdg_view *xdg_view, struct wlr_surface *surface) {
@@ -108,7 +108,7 @@ static void qw_xdg_view_place(void *self, int x, int y, int width, int height, i
                          xdg_view->base.width != width || xdg_view->base.height != height ||
                          state.width != width || state.height != height;
     struct wlr_box geom;
-    wlr_xdg_surface_get_geometry(surface, &geom);
+    wlr_surface_get_extents(surface->surface, &geom);
     bool geom_changed = xdg_view->geom.x != geom.x || xdg_view->geom.y != geom.y ||
                         xdg_view->geom.width != geom.width || xdg_view->geom.height != geom.height;
     bool needs_repos = place_changed || geom_changed;

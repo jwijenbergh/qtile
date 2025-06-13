@@ -1,9 +1,8 @@
-from cffi import FFI
-from pathlib import Path
-
-import cairocffi
 import os
 import subprocess
+from pathlib import Path
+
+from cffi import FFI
 
 qw_path = (Path(__file__).parent / ".." / "qw").resolve()
 
@@ -16,6 +15,7 @@ WAYLAND_SCANNER = subprocess.run(
     text=True,
     stdout=subprocess.PIPE,
 ).stdout.strip()
+
 WAYLAND_PROTOCOLS = subprocess.run(
     ["pkg-config", "--variable=pkgdatadir", "wayland-protocols"],
     text=True,
@@ -41,7 +41,7 @@ enum wlr_log_importance {
 extern "Python" void log_cb(enum wlr_log_importance importance,
                                        const char *log_str);
 // main callbacks
-typedef void cairo_surface_t;
+typedef struct _cairo_surface cairo_surface_t;
 typedef uint32_t xkb_keysym_t;
 extern "Python" int keyboard_key_cb(xkb_keysym_t, uint32_t, void *userdata);
 extern "Python" void manage_view_cb(struct qw_view *view, void *userdata);
@@ -91,13 +91,13 @@ ffi = FFI()
 ffi.set_source(
     "libqtile.backend.wayland._ffi",
     SOURCE,
-    libraries=["wlroots-0.18", "wayland-server", "input", "cairo"],
+    libraries=["wlroots-0.19", "wayland-server", "input", "cairo"],
     define_macros=[("WLR_USE_UNSTABLE", None)],
     include_dirs=[
         os.getenv("QTILE_CAIRO_PATH", "/usr/include/cairo"),
         os.getenv("QTILE_PIXMAN_PATH", "/usr/include/pixman-1"),
         os.getenv("QTILE_LIBDRM_PATH", "/usr/include/libdrm"),
-        os.getenv("QTILE_WLROOTS_PATH", "/usr/include/wlroots-0.18"),
+        os.getenv("QTILE_WLROOTS_PATH", "/usr/include/wlroots-0.19"),
         qw_path,
     ],
 )
