@@ -41,7 +41,7 @@ enum wlr_log_importance {
 extern "Python" void log_cb(enum wlr_log_importance importance,
                                        const char *log_str);
 // main callbacks
-typedef struct _cairo_surface cairo_surface_t;
+typedef struct cairo_surface_t cairo_surface_t;
 typedef uint32_t xkb_keysym_t;
 extern "Python" int keyboard_key_cb(xkb_keysym_t, uint32_t, void *userdata);
 extern "Python" void manage_view_cb(struct qw_view *view, void *userdata);
