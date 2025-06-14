@@ -139,9 +139,7 @@ static void qw_xdg_view_place(void *self, int x, int y, int width, int height, i
                          xdg_view->base.width != width || xdg_view->base.height != height ||
                          state.width != width || state.height != height;
 
-    // Get surface extents for geometry comparison
-    struct wlr_box geom;
-    wlr_surface_get_extents(surface->surface, &geom);
+    struct wlr_box geom = surface->geometry;
     bool geom_changed = xdg_view->geom.x != geom.x || xdg_view->geom.y != geom.y ||
                         xdg_view->geom.width != geom.width || xdg_view->geom.height != geom.height;
 
