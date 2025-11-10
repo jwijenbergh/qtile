@@ -14,16 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux_2_28_x86_64
     env:
-      libdrm-version: "2.4.121"
+      libdrm-version: "2.4.122"
       seatd-version: "0.6.4"
-      pixman-version: "0.42.0"
+      pixman-version: "0.43.0"
       xkbcommon-version: "1.7.0"
       xwayland-version: "22.1.9"
       xcvt-version: "0.1.2"
       inputproto-version: "2021.5"
-      wayland-protocols-version: "1.32"
-      wayland-version: "1.22.0"
-      wlroots-version: "0.17.3"
+      wayland-protocols-version: "1.41"
+      wayland-version: "1.24.0"
+      wlroots-version: "0.19.2"
     steps:
       - name: Install dependencies
         run: |
